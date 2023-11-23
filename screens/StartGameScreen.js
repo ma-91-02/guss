@@ -2,21 +2,30 @@ import { View, TextInput, Text, StyleSheet } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 
 import Colors from "../constants/color";
+import Card from "../components/Card";
 
 const StartGameScreen = () => {
   //start game screen
   return (
     <View style={styles.rootContainer}>
-      <TextInput style={styles.numberInput} />
+      <Card>
+        <TextInput
+          maxLength={2}
+          keyboardType="number-pad"
+          autoCorrect={false}
+          autoCapitalize="none"
+          style={styles.numberInput}
+        />
 
-      <View style={styles.buttonsContainer}>
-        <View style={styles.buttonContainer}>
-          <PrimaryButton>Reset</PrimaryButton>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={()=>{console.log('reset pressed')}}>Reset</PrimaryButton>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={()=>{console.log('confirm pressed')}}>Confirm</PrimaryButton>
+          </View>
         </View>
-        <View style={styles.buttonContainer}>
-          <PrimaryButton>Confirm</PrimaryButton>
-        </View>
-      </View>
+      </Card>
     </View>
   );
 };
@@ -28,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 100,
     alignItems: "center",
-    backgroundColor: "red",
+    // backgroundColor: "",
   },
   numberInput: {
     width: 50,
@@ -43,7 +52,6 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "row",
-    // justifyContent: 'space-between',
   },
   buttonContainer: {
     flex: 1,
