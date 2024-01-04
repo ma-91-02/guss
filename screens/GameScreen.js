@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Alert, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  FlatList,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
 
-import { AntDesign, Feather} from '@expo/vector-icons';
+import { AntDesign, Feather } from "@expo/vector-icons";
 import Title from "../components/Title";
 import Card from "../components/Card";
 import InstructionText from "../components/InstructionText";
@@ -68,9 +76,10 @@ const GameScreen = ({ userNumber, onGameOver }) => {
     setGuessRounds((prevGuessRounds) => [newRndNumber, ...prevGuessRounds]);
   };
 
-  return (
-    <View style={styles.container}>
-      <Title>Opponent's Guess</Title>
+  const { width, height } = useWindowDimensions();
+
+  let content = (
+    <>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card>
         <InstructionText style={styles.text}>Higher or lower?</InstructionText>
@@ -88,37 +97,85 @@ const GameScreen = ({ userNumber, onGameOver }) => {
               style={styles.btnText}
               onPress={nextGuessHandler.bind(this, "greater")}
             >
-              <AntDesign name="plus" size={24} color={Colors.accent}/>
+              <AntDesign name="plus" size={24} color={Colors.accent} />
             </PrimaryButton>
           </View>
         </View>
       </Card>
-      <View>
-        <FlatList
-          data={guessRounds}
-          renderItem={(itemData) => (
-            <GuessLogItem roundNumber={itemData.index} guss={itemData.item} />
-          )}
-          keyExtractor={(item) => item}
-        />
+    </>
+  );
+
+  if (height < 500) {
+    content = (
+      <>
+        <Card>
+          <InstructionText style={styles.text}>
+            Higher or lower?
+          </InstructionText>
+          <View style={styles.btnCont}>
+            <View style={styles.btn}>
+              <PrimaryButton
+                style={styles.btnText}
+                onPress={nextGuessHandler.bind(this, "lower")}
+              >
+                <Feather name="minus" size={24} color={Colors.accent} />
+              </PrimaryButton>
+            </View>
+            <NumberContainer>{currentGuess}</NumberContainer>
+            <View style={styles.btn}>
+              <PrimaryButton
+                style={styles.btnText}
+                onPress={nextGuessHandler.bind(this, "greater")}
+              >
+                <AntDesign name="plus" size={24} color={Colors.accent} />
+              </PrimaryButton>
+            </View>
+          </View>
+        </Card>
+      </>
+    );
+  }
+
+  return (
+    <ScrollView style={styles.screen}>
+      <View style={styles.container}>
+        <Title>Opponent's Guess</Title>
+        {content}
+        <View style={styles.listContainer}>
+          <FlatList
+            data={guessRounds}
+            renderItem={(itemData) => (
+              <GuessLogItem roundNumber={itemData.index} guss={itemData.item} />
+            )}
+            keyExtractor={(item) => item}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default GameScreen;
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     // justifyContent:'center',
+    marginTop: 24,
     alignItems: "center",
   },
   btnCont: {
     flexDirection: "row",
+    alignItems: "center",
     // width: "100%",
   },
   btn: {
+    flex: 1,
+  },
+  listContainer: {
     flex: 1,
   },
   text: {
